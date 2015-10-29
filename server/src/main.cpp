@@ -23,7 +23,8 @@
 
 #include "rapidjson/document.h"
 #include "rapidjson/reader.h"
-#include "rapidjson/filestream.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
 #include "fcserver.h"
 #include "version.h"
 #include <cstdio>
@@ -66,8 +67,9 @@ int main(int argc, char **argv)
             perror("Error opening config file");
             return 2;
         }
+	char buffer[65536];
 
-        rapidjson::FileStream istr(configFile);
+        rapidjson::FileReadStream istr(configFile, buffer, sizeof(buffer));
         config.ParseStream<0>(istr);
 
     } else if (argc == 1) {
