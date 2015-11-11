@@ -9,12 +9,14 @@ CPP_FILES += \
 	src/usbdevice.cpp \
 	src/fcdevice.cpp \
 	src/enttecdmxdevice.cpp \
+	src/bw_wsdevice.cpp \
 	src/fcserver.cpp \
 	src/version.cpp \
 	src/tinythread.cpp \
 	src/httpdocs.cpp
 
-INCLUDES += -Isrc
+#INCLUDES += -Isrc -I../rapidjson/include
+INCLUDES += -Isrc -I..
 CLEAN_FILES += src/*.d src/*.o src/httpdocs.cpp
 CPPFLAGS += -Wno-strict-aliasing
 

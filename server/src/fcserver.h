@@ -28,7 +28,7 @@
 #include "usbdevice.h"
 #include <sstream>
 #include <vector>
-#include <libusb.h>
+#include <libusb-1.0/libusb.h>
 #include "tinythread.h"
 
 

@@ -26,6 +26,7 @@
 #include "fcdevice.h"
 #include "version.h"
 #include "enttecdmxdevice.h"
+#include "bw_wsdevice.h"
 #include <ctype.h>
 #include <iostream>
 
@@ -151,6 +152,9 @@ void FCServer::usbDeviceArrived(libusb_device *device)
     } else if (EnttecDMXDevice::probe(device)) {
         dev = new EnttecDMXDevice(device, mVerbose);
 
+    } else if (BitWizardWSDevice::probe(device)) {
+        dev = new BitWizardWSDevice(device, mVerbose);
+
     } else {
         return;
     }
@@ -173,7 +177,7 @@ void FCServer::usbDeviceArrived(libusb_device *device)
                     break;
 
                 default:
-                    std::clog << "Error opening " << dev->getName() << ": " << libusb_strerror(libusb_error(r)) << "\n";
+                    std::clog << "Error opening " << dev->getName() << ": " << libusb_strerror(libusb_error(r)) << "(" << r << ")" << "\n";
                     break;
             }
         }
