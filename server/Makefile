@@ -15,8 +15,7 @@ CPP_FILES += \
 	src/tinythread.cpp \
 	src/httpdocs.cpp
 
-#INCLUDES += -Isrc -I../rapidjson/include
-INCLUDES += -Isrc -I..
+INCLUDES += -Isrc -I.. -I../rapidjson
 CLEAN_FILES += src/*.d src/*.o src/httpdocs.cpp
 CPPFLAGS += -Wno-strict-aliasing
 
