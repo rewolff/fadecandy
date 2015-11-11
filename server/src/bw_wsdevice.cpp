@@ -138,22 +138,14 @@ int BitWizardWSDevice::open()
       std::string line, s;
       int p;
 
-      //myfd = ::open ("/dev/bw_ws2812", O_RDWR | O_NONBLOCK, 0);
-
-#if 1
-      //mIOstream.open ("/dev/bw_ws2812", std::fstream::app | std::fstream::binary);
       mIstream.open ("/dev/bw_ws2812");
       mOstream.open ("/dev/bw_ws2812");
       if (!mIstream.is_open()) 
 	return -1;
       if (!mOstream.is_open()) 
-      return -1;
+	return -1;
 
-      mytest = 1234;
-
-      std::cout.write ("This is a test.......", 20);
-
-      mOstream  << "uid\n";
+      mOstream  << "\nuid\n";
       mOstream.flush ();
       while ( getline (mIstream, line) ) {
 	p = line.find ("uid=");
@@ -169,18 +161,11 @@ int BitWizardWSDevice::open()
 	}
       }
 
-
       if (mOstream.fail())
 	std::cout << "open stream fail error.\n";
       if (mOstream.bad())
 	std::cout << "open stream bad error.\n";
 
-      //mIOstream.get ();
-      //mIOstream.get ();
-
-#else
-      mSerialString = "test";
-#endif
       std::cout << "bw detected.... " << mTypeString <<" serial: " << mSerialString << "\n";
     }
 
@@ -304,13 +289,6 @@ void BitWizardWSDevice::writeFramebuffer()
   header[2] = NUM_PIXELS & 0xff;
   header[3] = NUM_PIXELS >> 8;
 
-  std::cout  << "dumping buffer. ";
-  std::cout << 
-    (int)mFramebuffer[0] << " " <<
-    (int)mFramebuffer[3] << " " <<
-    (int)mFramebuffer[6] << " test= " << mytest << "\n";
-
-#if 1
   if (!mOstream.is_open() ) {
     std::cout << "hmm. file not open???\n";
   }
@@ -320,7 +298,6 @@ void BitWizardWSDevice::writeFramebuffer()
   if (mOstream.bad())
     std::cout << "nowrite bad error.\n";
 
-#if 1
   mOstream.write (header, sizeof(header));
 
   if (mOstream.fail())
@@ -329,15 +306,7 @@ void BitWizardWSDevice::writeFramebuffer()
     std::cout << "write bad error.\n";
 
   mOstream.write ((char*)mFramebuffer, NUM_PIXELS*3);
-#else
-  mIOstream << header << mFramebuffer;
-#endif
-
-#else
-  //write (myfd, header, sizeof(header));
-  //write (myfd, mFramebuffer, NUM_PIXELS*3);
-#endif
-
+  mOstream.flush ();
 }
 
 
@@ -352,7 +321,7 @@ void BitWizardWSDevice::writeMessage(const OPC::Message &msg)
   switch (msg.command) {
 
   case OPC::SetPixelColors:
-    std::cout  << "setpixels...\n";
+    //std::cout  << "setpixels...\n";
 
     opcSetPixelColors(msg);
     writeFramebuffer();
@@ -389,6 +358,7 @@ void BitWizardWSDevice::opcSetPixelColors(const OPC::Message &msg)
     opcMapPixelColors(msg, map[i]);
   }
 }
+
 
 void BitWizardWSDevice::opcMapPixelColors(const OPC::Message &msg, const Value &inst)
 {

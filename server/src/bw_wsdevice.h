@@ -83,8 +83,8 @@ private:
     //std::fstream mIOstream;
     std::ifstream mIstream;
     std::ofstream mOstream;
-    int myfd;
-    int mytest;
+    // int myfd;
+    // int mytest;
 
 
     const Value *mConfigMap;
