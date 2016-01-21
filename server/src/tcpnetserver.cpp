@@ -61,7 +61,7 @@ bool TcpNetServer::start(const char *host, int port)
     memset(&info, 0, sizeof info);
     info.gid = -1;
     info.uid = -1;
-    //info.host = host;
+    info.host = host;
     info.port = port;
     info.protocols = protocols;
     info.user = this;
@@ -129,7 +129,7 @@ int TcpNetServer::lwsCallback(libwebsocket_context *context, libwebsocket *wsi,
 
     switch (reason) {
         case LWS_CALLBACK_CLOSED:
-        //case LWS_CALLBACK_CLOSED_HTTP:
+        case LWS_CALLBACK_CLOSED_HTTP:
         case LWS_CALLBACK_DEL_POLL_FD:
             if (client && client->opcBuffer) {
                 free(client->opcBuffer);
@@ -149,7 +149,6 @@ int TcpNetServer::lwsCallback(libwebsocket_context *context, libwebsocket *wsi,
             // Only serve one file per connect
             return -1;
 
-#if 0
         case LWS_CALLBACK_HTTP_WRITEABLE:
             return self->httpWrite(context, wsi, *client);
 
@@ -159,7 +158,6 @@ int TcpNetServer::lwsCallback(libwebsocket_context *context, libwebsocket *wsi,
                 return self->opcRead(context, wsi, *client, (uint8_t*)in, len);
             }
             break;
-#endif
 
         case LWS_CALLBACK_RECEIVE:
             // WebSockets data received
@@ -448,7 +446,7 @@ void TcpNetServer::jsonBufferPrepare(jsonBuffer_t &buffer, rapidjson::Value &val
 int TcpNetServer::jsonBufferSend(jsonBuffer_t &buffer, libwebsocket *wsi)
 {
     const char *string = buffer.GetString() + LWS_SEND_BUFFER_PRE_PADDING;
-    size_t len = buffer.GetSize() - LWS_SEND_BUFFER_PRE_PADDING - LWS_SEND_BUFFER_POST_PADDING;
+    size_t len = buffer.Size() - LWS_SEND_BUFFER_PRE_PADDING - LWS_SEND_BUFFER_POST_PADDING;
     return libwebsocket_write(wsi, (unsigned char *) string, len, LWS_WRITE_TEXT);
 }
 
